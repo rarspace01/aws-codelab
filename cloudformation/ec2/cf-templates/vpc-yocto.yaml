@@ -10,6 +10,10 @@ Parameters:
     Type: String
   KeyName:
     Type: String
+  WebServerPort:
+    Type: String
+  VpcCidr:
+    Type: String
 
 Resources:
 
@@ -24,7 +28,7 @@ Resources:
         - IpProtocol: "tcp"
           FromPort: "8080"
           ToPort: "8080"
-          CidrIp: "0.0.0.0/0"
+          CidrIp: !Ref VpcCidr
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-yocto"
@@ -99,6 +103,32 @@ Resources:
 
   ###### ELB ######
 
+  ElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Subnets:
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-1-public-id"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-2-public-id"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-3-public-id"}
+      Listeners:
+      - LoadBalancerPort: '80'
+        InstancePort:
+          Ref: WebServerPort
+        Protocol: HTTP
+      HealthCheck:
+        Target:
+          Fn::Join:
+          - ''
+          - - 'HTTP:'
+            - Ref: WebServerPort
+            - "/"
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+      SecurityGroups:
+              - !Ref SecurityGroupELB
+
   SecurityGroupELB:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -137,6 +167,8 @@ Resources:
       MinSize: "1"
       DesiredCapacity: "1"
       MaxSize: "2"
+      LoadBalancerNames:
+            - Ref: "ElasticLoadBalancer"
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-yocto"

@@ -1,5 +1,7 @@
 ---
-VPCStackName: "vpc-foobar"
-TeamName:     "foobar"
-KeyName:      "some-keypair"
+VPCStackName: "vpc-dhamann"
+TeamName:     "dhamann"
+KeyName:      "dh-keypair"
 ImageId:      "ami-82be18ed"
+WebServerPort: "8080"
+VpcCidr:        "172.16.0.0/16"

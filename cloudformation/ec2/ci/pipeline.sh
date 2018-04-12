@@ -32,25 +32,25 @@ bundle exec autostacker24 update --template cf-templates/vpc.yaml \
     --profile "${PROFILE}"
 
 # 2. Deploy debug security group
-#bundle exec autostacker24 validate --template cf-templates/vpc-debug-security-group.yaml \
-#    --profile "${PROFILE}" \
-#    --region "${REGION}"
-#bundle exec autostacker24 update --template cf-templates/vpc-debug-security-group.yaml \
-#    --stack "vpc-${TEAM_NAME}-debug-sg" \
-#    --param VPCStackName="vpc-${TEAM_NAME}" \
-#    --param TeamName="${TEAM_NAME}" \
-#    --region "${REGION}" \
-#    --profile "${PROFILE}"
+bundle exec autostacker24 validate --template cf-templates/vpc-debug-security-group.yaml \
+    --profile "${PROFILE}" \
+    --region "${REGION}"
+bundle exec autostacker24 update --template cf-templates/vpc-debug-security-group.yaml \
+    --stack "vpc-${TEAM_NAME}-debug-sg" \
+    --param VPCStackName="vpc-${TEAM_NAME}" \
+    --param TeamName="${TEAM_NAME}" \
+    --region "${REGION}" \
+    --profile "${PROFILE}"
 
 # 3. Deploy yocto
-#bundle exec autostacker24 validate --template cf-templates/vpc-yocto.yaml \
-#    --profile "${PROFILE}" \
-#    --region "${REGION}"
-#bundle exec autostacker24 update --template cf-templates/vpc-yocto.yaml \
-#    --params properties/yocto.yaml \
-#    --stack "vpc-${TEAM_NAME}-yocto" \
-#    --region "${REGION}" \
-#    --profile "${PROFILE}"
+bundle exec autostacker24 validate --template cf-templates/vpc-yocto.yaml \
+    --profile "${PROFILE}" \
+    --region "${REGION}"
+bundle exec autostacker24 update --template cf-templates/vpc-yocto.yaml \
+    --params properties/yocto.yaml \
+    --stack "vpc-${TEAM_NAME}-yocto" \
+    --region "${REGION}" \
+    --profile "${PROFILE}"
 
 # 4. Run integration tests if YOCTO_URL present
 if [ -n "${YOCTO_URL}" ]; then
